@@ -1,0 +1,55 @@
+version: "1.1"
+name: Users
+env:
+  host: "localhost:4000"
+tests:
+  users:
+    steps:
+      - name: Create User
+        http:
+          url: "http://${{env.host}}/v1/auth/sign-up"
+          method: POST
+          check:
+            status: /^20/
+          json:
+            firstname: "${{ lorem.word | fake }}"
+            lastname: "${{ lorem.word | fake }}"
+            email: "${{ internet.email | fake }}"
+            password: "12345678"
+            confirmPassword: "12345678"
+          captures:
+            email:
+              jsonpath: $.email
+      - name: Login User
+        http:
+          url: "http://${{env.host}}/v1/auth/login"
+          method: POST
+          json:
+            email: ${{ captures.email }}
+            password: "12345678"
+          captures:
+            accessToken777:
+              jsonpath: $.token
+          check:
+            status: /^20/
+      - name: Get all users
+        http:
+          url: "http://${{env.host}}/v1/user"
+          method: GET
+          auth:
+            bearer:
+              token: "${{captures.accessToken}}"
+          check:
+            status: /^20/
+      - name: Invalid User Creation
+        http:
+          url: "http://${{env.host}}/v1/auth/sign-up"
+          method: POST
+          check:
+            status: /^20/
+          json:
+            firstname: "${{ | naughtystring  }}"
+            lastname: "${{ | naughtystring  }}"
+            email: "${{ internet.email | fake }}"
+            password: "12345678"
+            confirmPassword: "12345678"

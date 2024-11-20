@@ -1,0 +1,35 @@
+version: "1.1"
+name: Get all books
+env:
+  host: localhost:4000
+  email: Joseph.Connelly@gmail.com
+  password: "123458ABC"
+tests:
+  books:
+    steps:
+      - name: Login
+        http:
+          url: http://${{env.host}}/v1/auth/login
+          method: POST
+          check:
+            status: /^20/
+          json:
+            email: ${{env.email}}
+            password: ${{env.password}}
+          captures:
+            accessToken:
+              jsonpath: $.accessToken
+      - name: Get all books
+        http:
+          url: http://${{env.host}}/v1/books
+          method: GET
+          auth:
+            bearer:
+              token: ${{captures.accessToken}}
+      - name: Get Book by ID
+        http:
+          url: http://${{env.host}}/v1/books/6718a4e6848543af7232928e
+          method: GET
+          auth:
+            bearer:
+              token: ${{captures.accessToken}}
