@@ -12,7 +12,7 @@ module.exports = {
             page: Joi.number().required(),
             pub_date:Joi.date().required()
         },
-        model: "createBook", // Name of the model
+        model: "Create Book", // Name of the model
         group: "Book", // Swagger tag for apis.
         description: "Create book and save details in database"
     },

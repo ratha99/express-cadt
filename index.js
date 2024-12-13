@@ -12,6 +12,7 @@ const coursesRouter = require('./src/routes/course.js')
 const userRoturer = require('./src/routes/user.js')
 const authRouter = require('./src/routes/auth.js')
 const chatRoute = require('./src/routes/chat.js')
+const serviceRouter = require('./src/routes/service.js')
 const passport = require('passport')
 const jwtStrategy = require('./src/common/strategy/jwt.js')
 const redisClient = require('./src/redis/index.js');
@@ -110,9 +111,12 @@ passport.use(jwtStrategy)
 //app.use(logger)
 // app.use(limiter)
 app.use(bodyParser.json())
+
+app.use(`/${version}/auth`, authRouter)
 // app.use(`/${version}/auth`, authRouter)
 
-
+app.use(`/${version}/services`, 
+    serviceRouter)
 // app.use(cacheMiddleware)
 // app.use(cacheInterceptor(30 * 60))
 // app.use(invalidateInterceptor)
@@ -140,7 +144,7 @@ setupSwagger(app)
 
 app.use(`/${version}/chat`, chatRoute)
 app.use(`/${version}/files`, fileRouter)
-app.use(`/${version}/auth`, authRouter)
+
 // app.get('/', (req,res)=>{
 //     return res.json("Hello1")
 // })
