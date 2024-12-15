@@ -46,5 +46,7 @@ you can build and rund the project following the docker command:
     
         run this command to stop services that running in container
    
+## License
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
