@@ -13,6 +13,8 @@ services:
       - NGINX_MAX_BODY=100M
     ports:
       - 4001:4001
+    networks:
+      - production-networks
   express:
     build:
       context: .
@@ -27,6 +29,8 @@ services:
     depends_on:
       - mongodb
       - redis
+    networks:
+      - production-networks
   mongodb:
     build:
       context: .
@@ -36,11 +40,15 @@ services:
       - "27019:27017"
     volumes:
       - mongodbdata:/data/db
+    networks:
+      - production-networks
   redis:
     image: redis:5
     container_name: cadts-redis
     ports:
       - 6380:6379
+    networks:
+      - production-networks
   redis-commander:
     image: rediscommander/redis-commander:latest
     environment:
@@ -49,5 +57,11 @@ services:
       - "8082:8081"
     depends_on:
       - redis
+    networks:
+      - production-networks
 volumes:
   mongodbdata:
+networks:
+  production-networks:
+    name: Nginx
+    external: true
