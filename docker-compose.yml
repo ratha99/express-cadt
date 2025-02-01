@@ -3,16 +3,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-nginx
-    container_name: load-balancer
+    container_name: load-balancers
     depends_on:
       - express
     environment:
       - NGINX_SERVER_NAME=localhost
       - EXPRESS_HOST_1=express-cadt-express-1
-      - EXPRESS_PORT=4000
+      - EXPRESS_PORT=4001
       - NGINX_MAX_BODY=100M
     ports:
-      - 4000:4000
+      - 4001:4001
   express:
     build:
       context: .
@@ -31,20 +31,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-mongo
-    container_name: mongodb
+    container_name: mongodbs
     ports:
-      - "27017:27017"
+      - "27019:27017"
     volumes:
       - mongodbdata:/data/db
   redis:
     image: redis:5
-    container_name: cadt-redis
+    container_name: cadts-redis
     ports:
-      - 6379:6379
+      - 6380:6379
   redis-commander:
     image: rediscommander/redis-commander:latest
     environment:
-      - REDIS_HOSTS=local:cadt-redis:6379
+      - REDIS_HOSTS=local:cadts-redis:6379
     ports:
       - "8082:8081"
     depends_on:

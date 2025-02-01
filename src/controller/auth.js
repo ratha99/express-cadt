@@ -6,7 +6,7 @@ const axios = require('axios')
 const { signJWT } = require('../utils')
 // const UserModel = require('../models/user.js')
 const signUp = asyncHandler(async (req, res) => {
-    const { firstname, lastname, email, password, confirmPassword } = req.body
+    const { firstname, lastname, email, password, confirmPassword, phone, profile_pic,role, address} = req.body
     if (password !== confirmPassword) {
         throw new Error("Password not matched!!!!")
     }
@@ -18,7 +18,11 @@ const signUp = asyncHandler(async (req, res) => {
         firstname: firstname,
         lastname: lastname,
         email: email,
-        password: hashedPassword
+        password: hashedPassword,
+        phone: phone,
+        profile_pic: profile_pic,
+        role: role,
+        address: address,
     })
 
     const result = await user.save()
@@ -28,7 +32,6 @@ const signUp = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
     const user = await UserModel.findOne({ email: email })
-   
     if (!user) {
         return res.status(404).json("User not found!")
     }

@@ -12,6 +12,9 @@ const coursesRouter = require('./src/routes/course.js')
 const userRoturer = require('./src/routes/user.js')
 const authRouter = require('./src/routes/auth.js')
 const chatRoute = require('./src/routes/chat.js')
+const postRoute = require('./src/routes/post.js')
+const categoryRoute = require('./src/routes/category.js')
+
 const serviceRouter = require('./src/routes/service.js')
 const passport = require('passport')
 const jwtStrategy = require('./src/common/strategy/jwt.js')
@@ -138,10 +141,16 @@ app.use(`/${version}/course`,
 app.use(`/${version}/user`,
     cacheMiddleware,
     cacheInterceptor(30 * 60),
+    verifyJWT,
     invalidateInterceptor, userRoturer)
+app.use(`/${version}/post`,
+    verifyJWT,
+    postRoute)
+app.use(`/${version}/category`,
+    verifyJWT,
+    categoryRoute)
 
 setupSwagger(app)
-
 app.use(`/${version}/chat`, chatRoute)
 app.use(`/${version}/files`, fileRouter)
 
@@ -149,7 +158,8 @@ app.use(`/${version}/files`, fileRouter)
 //     return res.json("Hello1")
 // })
 app.use(handleError)
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 server.listen(PORT, function(){
-    console.log("Server is running on port 4000")
+    console.log("Server is running on port 4001")
+    
 })

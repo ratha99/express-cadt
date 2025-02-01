@@ -7,21 +7,21 @@ const UserModel = require('../models/user.js')
  */
 
 const createUser = asyncHandler(async (req, res) => {
-    const course = new UserModel(req.body)
-    const result = await course.save()
+    const user = new UserModel(req.body)
+    const result = await user.save()
     return res.json(result)
 })
 
 const getUserById = asyncHandler(async (req, res) => {
     const id = req.params.id
-    const course = await UserModel.findById(id)
-    return res.json(course)
+    const user = await UserModel.findById(id)
+    return res.json(user)
 })
 
 const getUsers = asyncHandler(async (req, res) => {
     // Get all courses 
-    const courses = await UserModel.find()
-    return res.json(courses)
+    const user = await UserModel.find()
+    return res.json(user)
 })
 
 const deleteUserById = asyncHandler(async (req, res) => {
