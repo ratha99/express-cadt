@@ -46,7 +46,11 @@ const login = asyncHandler(async (req, res) => {
     const hashedToken = await bcrypt.hash(token.refreshToken, 10)
     user.refreshToken = hashedToken
     user.save()
-    return res.json(token)
+    return res.json({
+        token: token.token,
+        refreshToken: token.refreshToken,
+        user: user
+    })
 })
 const handleGoogle = asyncHandler(async (req, res) => {
     // Get one time code from OAuth Server

@@ -18,6 +18,12 @@ const getUserById = asyncHandler(async (req, res) => {
     return res.json(user)
 })
 
+const getUserByToken = asyncHandler(async (req, res) => {
+    const token = req.params.token
+    const user = await UserModel.findOne({ refreshToken: token })
+    return res.json(user)
+})
+
 const getUsers = asyncHandler(async (req, res) => {
     // Get all courses 
     const user = await UserModel.find()
@@ -41,5 +47,6 @@ module.exports = {
     getUserById,
     getUsers,
     deleteUserById,
+    getUserByToken,
     updateUserById
 }
