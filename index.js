@@ -144,7 +144,7 @@ app.use(`/${version}/user`,
     verifyJWT,
     invalidateInterceptor, userRoturer)
 app.use(`/${version}/post`,
-    verifyJWT,
+    // verifyJWT,
     postRoute)
 app.use(`/${version}/category`,
     verifyJWT,
