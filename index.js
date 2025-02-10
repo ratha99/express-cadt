@@ -141,7 +141,7 @@ app.use(`/${version}/course`,
 app.use(`/${version}/user`,
     cacheMiddleware,
     cacheInterceptor(30 * 60),
-    verifyJWT,
+    // verifyJWT,
     invalidateInterceptor, userRoturer)
 app.use(`/${version}/post`,
     // verifyJWT,
