@@ -28,16 +28,18 @@ const getPostByUserId = asyncHandler(async (req, res) => {
 })
 
 const getPost = asyncHandler(async (req, res) => {
-    const {limit, page} = req.query
-    const option  = {
-        limit:limit ? limit: -1,
-        page:page ? page : -1,
-        pagination:  true ,
-        populate: [ "userId"],
-    }
-    const post = await PostModel.paginate({}, option);
-    return res.json(post)
-})
+    const { limit, page } = req.query;
+    const options = {
+        limit: limit ? parseInt(limit) : -1, // Ensure limit is a number
+        page: page ? parseInt(page) : 1, // Ensure page is a number, default to 1
+        pagination: true,
+        populate: ["userId"],
+        sort: { createdDate: -1 } // Sort by createdAt in descending order
+    };
+
+    const posts = await PostModel.paginate({}, options);
+    return res.json(posts);
+});
 
 const deletePostById = asyncHandler(async (req, res) => {
     const id = req.params.id
