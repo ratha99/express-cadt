@@ -7,9 +7,26 @@ const PostModel = require('../models/post.js')
  */
 
 const createPost = asyncHandler(async (req, res) => {
-    const post = new PostModel(req.body)
-    const result = await post.save()
-   // return res.json(result)
+    const {  title, description, categoryId, type, location, images, date, phone, status } = req.body;
+   const uid = req.body.userId;
+   const userId = uid._id;
+   console.log("UID",userId);
+    const newPost = new PostModel({
+        userId,
+        title,
+        description,
+        categoryId,
+        type,
+        location,
+        images, // Ensure this is an array if multiple images
+        phone,
+        date,
+        status
+    });
+   // console.log("Data",req.body);
+     const post = await newPost.save();
+//     const result = await post.save()
+//return res.json(result)
    return res.json({
         status: "success",
         post: post
@@ -67,13 +84,40 @@ const getPost = asyncHandler(async (req, res) => {
 const deletePostById = asyncHandler(async (req, res) => {
     const id = req.params.id
     const result = await PostModel.deleteOne({ _id: id })
-    return res.json(result)
+    return res.json({
+        status: "success",
+        post: result
+    })
+    
 })
 
 const updateUpdateById = asyncHandler(async (req, res) => {
-    const id = req.params.id
-    const result = await PostModel.updateOne({ _id: id }, req.body)
-    return res.json(result)
+    console.log("Update",req.body);
+    const {  title, description, categoryId, type, location, images, date, phone, status } = req.body;
+    const uid = req.body.userId;
+    const userId = uid._id;
+    console.log("UID",userId);
+     const updateData ={
+         userId,
+         title,
+         description,
+         categoryId,
+         type,
+         location,
+         images, // Ensure this is an array if multiple images
+         phone,
+         date,
+         status
+     };
+
+     const id = req.params.id
+     console.log("ID",id);
+     const result = await PostModel.updateOne({ _id: id }, { $set: updateData });
+     return res.json({
+        status: "success",
+        post: result
+    })
+    // return res.json(result)
 })
 
 module.exports = {
