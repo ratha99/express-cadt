@@ -64,7 +64,7 @@ const getPostByUserId = asyncHandler(async (req, res) => {
 });
 
 const getPost = asyncHandler(async (req, res) => {
-    const { limit, page, userId, query} = req.query;
+    const { limit, page, userId, query, category} = req.query;
     const options = {
         limit: limit ? parseInt(limit) : -1, // Ensure limit is a number
         page: page ? parseInt(page) : 1, // Ensure page is a number, default to 1
@@ -72,6 +72,18 @@ const getPost = asyncHandler(async (req, res) => {
         populate: ["userId"],
         sort: { createdDate: -1 } // Sort by createdAt in descending order
     };
+    if(category){
+        const posts = await PostModel.paginate(
+            {
+                $or: [
+                    { categoryId: { $regex: category, $options: 'i' } }
+                ]
+            },
+            options
+        );
+        console.log("Category");
+        return res.json(posts);
+    }
     if (!query) {
         if(userId){
             const posts = await PostModel.paginate({ userId }, options); // ✅ Filtering by userId
@@ -92,6 +104,7 @@ const getPost = asyncHandler(async (req, res) => {
             },
             options
         );
+        console.log("Category 1");
         return res.json(posts);
     }
     
