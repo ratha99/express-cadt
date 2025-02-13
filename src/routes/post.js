@@ -5,7 +5,8 @@ const {
     getPost,
     deletePostById,
     updateUpdateById,
-    getPostByUserId
+    getPostByUserId,
+    // searchPosts
 } = require('../controller/post.js')
 const postRouter = express.Router()
 
@@ -15,5 +16,6 @@ postRouter.get('/', getPost)
 postRouter.get('/:id', getPostById)
 postRouter.delete('/:id', deletePostById)
 postRouter.put('/:id', updateUpdateById)
+// postRouter.get('/search', searchPosts);
 
 module.exports = postRouter

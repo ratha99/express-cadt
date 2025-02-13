@@ -9,4 +9,5 @@ userRouter.delete('/:id', deleteUserById)
 userRouter.put('/:id', updateUserById)
 userRouter.get('/token/:token', getUserByToken)
 
+
 module.exports = userRouter
