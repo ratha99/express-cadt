@@ -1,7 +1,8 @@
 
 const asyncHandler = require('express-async-handler')
 const UserModel = require('../models/user.js')
-
+const redis = require('redis');
+const redisClient = redis.createClient();
 /**
  * Controller is a specific function to handle specific tasks
  */
@@ -37,10 +38,22 @@ const deleteUserById = asyncHandler(async (req, res) => {
 })
 
 const updateUserById = asyncHandler(async (req, res) => {
-    const id = req.params.id
-    const result = await UserModel.updateOne({ _id: id }, req.body)
-    return res.json(result)
-})
+    const id = req.params.id;
+    const updateData = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        phone: req.body.phone,
+        profilePic: req.body.profilePic
+    };
+
+    const result = await UserModel.updateOne({ _id: id }, updateData);
+    console.log("Updated:", result);
+    return res.json({
+        status: "success",
+        post: result.modifiedCount
+    });
+});
 
 module.exports = {
     createUser,

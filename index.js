@@ -139,10 +139,11 @@ app.use(`/${version}/course`,
     verifyJWT,
      coursesRouter)
 app.use(`/${version}/user`,
-    cacheMiddleware,
-    cacheInterceptor(30 * 60),
+    // cacheMiddleware,
+    // cacheInterceptor(30 * 60),
     // verifyJWT,
-    invalidateInterceptor, userRoturer)
+    //nvalidateInterceptor,
+     userRoturer)
 app.use(`/${version}/post`,
     // verifyJWT,
     postRoute)
