@@ -63,61 +63,146 @@ const getPostByUserId = asyncHandler(async (req, res) => {
     }
 });
 
+// const getPost = asyncHandler(async (req, res) => {
+//     const { limit, page, userId, query, category} = req.query;
+//     const options = {
+//         limit: limit ? parseInt(limit) : -1, // Ensure limit is a number
+//         page: page ? parseInt(page) : 1, // Ensure page is a number, default to 1
+//         pagination: true,
+//         populate: ["userId"],
+//         sort: { createdDate: -1 } // Sort by createdAt in descending order
+//     };
+//     if(category){
+//         const posts = await PostModel.paginate(
+//             {
+//                 $or: [
+//                     { categoryId: { $regex: category, $options: 'i' } }
+//                 ]
+//             },
+//             options
+//         );
+//         console.log("Category");
+//         return res.json(posts);
+//     }
+//     if (!query) {
+//         if(userId){
+//             const posts = await PostModel.paginate({ userId }, options); // ✅ Filtering by userId
+//             return res.json(posts);
+//         }else{
+//             const posts = await PostModel.paginate({}, options);
+//             return res.json(posts);
+//         }
+//     }else{
+//         const posts = await PostModel.paginate(
+//             {
+//                 $or: [
+//                     { title: { $regex: query, $options: 'i' } }, // Case-insensitive search
+//                     { description: { $regex: query, $options: 'i' } },
+//                     { type: { $regex: query, $options: 'i' } },
+//                     { categoryId: { $regex: query, $options: 'i' } }
+//                 ]
+//             },
+//             options
+//         );
+//         console.log("Category 1");
+//         return res.json(posts);
+//     }
+    
+    
+// });
+
+
 const getPost = asyncHandler(async (req, res) => {
-    const { limit, page, userId, query, category} = req.query;
+    const { limit, page, userId, query, category } = req.query;
+
+    // Validate and parse query parameters
+    const parsedLimit = limit ? parseInt(limit) : 10; // Default limit to 10
+    const parsedPage = page ? parseInt(page) : 1;
+
     const options = {
-        limit: limit ? parseInt(limit) : -1, // Ensure limit is a number
-        page: page ? parseInt(page) : 1, // Ensure page is a number, default to 1
+        limit: parsedLimit,
+        page: parsedPage,
         pagination: true,
         populate: ["userId"],
-        sort: { createdDate: -1 } // Sort by createdAt in descending order
+        sort: { createdDate: -1 }
     };
-    if(category){
-        const posts = await PostModel.paginate(
-            {
-                $or: [
-                    { categoryId: { $regex: category, $options: 'i' } }
-                ]
-            },
-            options
-        );
-        console.log("Category");
-        return res.json(posts);
+
+    // Base query to filter posts with status "active"
+    const baseQuery = { status: { $in: ["active"] } };
+
+    let searchQuery = { ...baseQuery };
+
+    if (category) {
+        searchQuery = {
+            ...baseQuery,
+            categoryId: { $regex: category, $options: 'i' }
+        };
+    } else if (query) {
+        searchQuery = {
+            ...baseQuery,
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } },
+                { type: { $regex: query, $options: 'i' } },
+                { categoryId: { $regex: query, $options: 'i' } }
+            ]
+        };
+    } else if (userId) {
+        searchQuery = {
+            status: { $in: ["active", "completed"] },
+            userId
+        };
     }
-    if (!query) {
-        if(userId){
-            const posts = await PostModel.paginate({ userId }, options); // ✅ Filtering by userId
-            return res.json(posts);
-        }else{
-            const posts = await PostModel.paginate({}, options);
-            return res.json(posts);
-        }
-    }else{
-        const posts = await PostModel.paginate(
-            {
-                $or: [
-                    { title: { $regex: query, $options: 'i' } }, // Case-insensitive search
-                    { description: { $regex: query, $options: 'i' } },
-                    { type: { $regex: query, $options: 'i' } },
-                    { categoryId: { $regex: query, $options: 'i' } }
-                ]
-            },
-            options
-        );
-        console.log("Category 1");
-        return res.json(posts);
+
+    try {
+        const posts = await PostModel.paginate(searchQuery, options);
+        res.json(posts);
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-    
-    
 });
 
 const deletePostById = asyncHandler(async (req, res) => {
-    const id = req.params.id
-    const result = await PostModel.deleteOne({ _id: id })
-    return res.json({
+    const { id } = req.params;
+    const { status } = req.body;
+    console.log("Status:", status);
+    console.log("id:", id);
+    if (!status) {
+      return res.status(400).json({
+        status: "error",
+        message: "Status is required in the request body.",
+      });
+    }
+  
+    try {
+      const updateData = { status }; // Create the update object
+      
+  
+      // Update the post in the database
+      const result = await PostModel.updateOne({ _id: id }, { $set: updateData });
+  
+      console.log("Result:", result);
+  
+      if (result.matchedCount === 0) {
+        return res.status(404).json({
+          status: "error",
+          message: "Post not found.",
+        });
+      }
+  
+      return res.json({
         status: "success",
-        post: result
-    })
+        message: "Post status updated successfully.",
+        post: result,
+      });
+    } catch (error) {
+      console.error("Error updating post status:", error);
+      return res.status(500).json({
+        status: "error",
+        message: "An error occurred while updating the post status.",
+      });
+    }
     
 })
 
