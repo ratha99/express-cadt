@@ -44,7 +44,7 @@ const updateUserById = asyncHandler(async (req, res) => {
         lastname: req.body.lastname,
         email: req.body.email,
         phone: req.body.phone,
-        profilePic: req.body.profilePic
+        profile_pic: req.body.profile_pic
     };
 
     const result = await UserModel.updateOne({ _id: id }, updateData);
