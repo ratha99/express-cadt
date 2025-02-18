@@ -149,7 +149,7 @@ const getPost = asyncHandler(async (req, res) => {
         };
     } else if (userId) {
         searchQuery = {
-            status: { $in: ["active", "completed"] },
+            status: { $in: ["active", "Resolved"] },
             userId
         };
     }
