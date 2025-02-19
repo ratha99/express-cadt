@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     phone: { type: String, required: true },
     status: { type: String },
-    createdDate: { type: Date, required: true, default: Date.now() },
+    createdDate: { type: Date, required: true, default: Date.now },
 });
 
 postSchema.plugin(mongoosePaginate);
