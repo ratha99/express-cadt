@@ -49,6 +49,18 @@ const login = asyncHandler(async (req, res) => {
     if (!compareResult) {
         return res.status(401).json("Incorrect email or password")
     }
+    if(user.role == "admin"){
+        const token = signJWT(user._id, user.email, user.username)
+        const hashedToken = await bcrypt.hash(token.refreshToken, 10)
+        user.refreshToken = hashedToken
+        user.save()
+        return res.json({
+            token: token.token,
+            refreshToken: token.refreshToken,
+            admin: "admin",
+            user: user
+        })
+    }
     const token = signJWT(user._id, user.email, user.username)
     const hashedToken = await bcrypt.hash(token.refreshToken, 10)
     user.refreshToken = hashedToken

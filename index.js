@@ -13,6 +13,7 @@ const userRoturer = require('./src/routes/user.js')
 const authRouter = require('./src/routes/auth.js')
 const chatRoute = require('./src/routes/chat.js')
 const postRoute = require('./src/routes/post.js')
+const blockRoute = require('./src/routes/block.js')
 const reportRoute = require('./src/routes/report.js')
 const categoryRoute = require('./src/routes/category.js')
 
@@ -151,6 +152,9 @@ app.use(`/${version}/post`,
 app.use(`/${version}/report`,
     // verifyJWT,
     reportRoute)
+app.use(`/${version}/block`,
+        // verifyJWT,
+    blockRoute)
 app.use(`/${version}/category`,
     verifyJWT,
     categoryRoute)

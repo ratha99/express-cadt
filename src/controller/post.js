@@ -113,7 +113,7 @@ const getPostByUserId = asyncHandler(async (req, res) => {
 
 
 const getPost = asyncHandler(async (req, res) => {
-    const { limit, page, userId, query, category } = req.query;
+    const { limit, page, userId, query, category, block } = req.query;
 
     // Validate and parse query parameters
     const parsedLimit = limit ? parseInt(limit) : 10; // Default limit to 10
@@ -152,6 +152,10 @@ const getPost = asyncHandler(async (req, res) => {
             status: { $in: ["active", "Resolved"] },
             userId
         };
+    }else if(block){
+        searchQuery = {
+            status: { $in: ["active", "Resolved","blocked","deactive"] }
+        }
     }
 
     try {
