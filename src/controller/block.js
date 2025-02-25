@@ -17,7 +17,8 @@ const createBlock = asyncHandler(async (req, res) => {
     console.log('Test', req.body);
 
     const { postId, smToken, postTitle, reason,userId } = req.body; // Add userToken and postTitle
-    console.log('ID', postId);
+   // console.log('ID', postId);
+
 
     // Update post status to 'blocked'
     const update = await PostModel.updateOne({ _id: postId }, { $set: { status: 'blocked' } });
