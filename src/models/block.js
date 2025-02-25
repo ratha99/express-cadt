@@ -7,6 +7,14 @@ const blockSchema = new mongoose.Schema({
     postId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "post" },
     reason: { type: String, required: true },
     status: { type: String },
+    smToken: { type: String },
+    postTitle: { type: String },
+    postDescription: { type: String },
+    postCategory: { type: String },
+    postLocation: { type: String },
+    postImages: { type: String },
+    postDate: { type: String },
+    postPhone: { type: String },
     createdDate: { type: Date, required: true, default: Date.now },
 });
 

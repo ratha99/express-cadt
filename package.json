@@ -23,6 +23,7 @@
     "express-intercept": "^1.1.0",
     "express-rate-limit": "^7.4.1",
     "express-validator": "^7.2.0",
+    "firebase-admin": "^13.1.0",
     "ioredis": "^5.4.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",

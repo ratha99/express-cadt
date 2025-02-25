@@ -9,7 +9,7 @@ const signUp = asyncHandler(async (req, res) => {
     console.log("Body:", JSON.stringify(req.body));
 
     
-    const { firstname, lastname, email, password, confirmPassword, phone, profile_pic,role, address} = req.body
+    const { firstname, lastname, email, password, confirmPassword, phone, profile_pic,role, address, smToken} = req.body
     if (password !== confirmPassword) {
         throw new Error("Password not matched!!!!")
     }
@@ -26,6 +26,7 @@ const signUp = asyncHandler(async (req, res) => {
         profile_pic: profile_pic,
         role: role,
         address: address,
+        smToken: smToken
     })
 
     const result = await user.save()

@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     address: { type: String },
     type:{type: String},
     refreshToken:{type:String},
+    smToken:{type:String},
     createdDate: { type: Date, required: true, default: Date.now() },
     updatedDate: { type: Date, required: true, default: Date.now() },
     
