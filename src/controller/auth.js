@@ -162,8 +162,8 @@ const logout = asyncHandler(async (req, res) => {
         return res.status(404).json("User not found!")
     }
 
-    user.refreshToken = null
-    user.smToken = null
+    user.refreshToken = ""
+    user.smToken = ""
     await user.save()
 
     return res.json({ status: "success", message: "User logged out successfully" })
