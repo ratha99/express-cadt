@@ -38,7 +38,7 @@ const signUp = asyncHandler(async (req, res) => {
     })
 })
 const login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body
+    const { email, password,  } = req.body
     const user = await UserModel.findOne({ email: email })
     if (!user) {
         return res.status(404).json("User not found!")
@@ -54,6 +54,7 @@ const login = asyncHandler(async (req, res) => {
         const token = signJWT(user._id, user.email, user.username)
         const hashedToken = await bcrypt.hash(token.refreshToken, 10)
         user.refreshToken = hashedToken
+        user.smToken = req.body.smToken
         user.save()
         return res.json({
             token: token.token,
