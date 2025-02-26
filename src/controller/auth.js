@@ -152,6 +152,20 @@ const exchangeRefreshToken = asyncHandler(async (req, res) => {
 
     return res.json(token)
 })
+const logout = asyncHandler(async (req, res) => {
+    const { userId } = req.body
 
-module.exports = { signUp, login, showGoogleOAuth, handleGoogle, exchangeJWTToUser, exchangeRefreshToken}
+    const user = await UserModel.findById(userId)
+    if (!user) {
+        return res.status(404).json("User not found!")
+    }
+
+    user.refreshToken = null
+    user.smToken = null
+    await user.save()
+
+    return res.json({ status: "success", message: "User logged out successfully" })
+})
+
+module.exports = { signUp, logout, login, showGoogleOAuth, handleGoogle, exchangeJWTToUser, exchangeRefreshToken}
 
