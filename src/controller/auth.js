@@ -65,6 +65,7 @@ const login = asyncHandler(async (req, res) => {
     const token = signJWT(user._id, user.email, user.username)
     const hashedToken = await bcrypt.hash(token.refreshToken, 10)
     user.refreshToken = hashedToken
+    user.smToken = req.body.smToken
     user.save()
     return res.json({
         token: token.token,
