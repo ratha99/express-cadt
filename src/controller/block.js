@@ -17,7 +17,7 @@ const createBlock = asyncHandler(async (req, res) => {
     console.log('Test', req.body);
 
     const { postId, smToken, postTitle, reason,userId } = req.body; // Add userToken and postTitle
-   // console.log('ID', postId);
+    console.log('smToken', smToken);
 
 
     // Update post status to 'blocked'
