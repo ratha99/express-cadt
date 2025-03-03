@@ -41,7 +41,13 @@ const createBlock = asyncHandler(async (req, res) => {
 
     return res.json(result);
 });
+const getNotification = asyncHandler(async (req, res) => {
+    const  userId  = req.query.userId;
+    const notifications = await BlockModel.find({ userId: userId });
+    return res.json(notifications);
+});
 
 module.exports = {
     createBlock,
+    getNotification
 };
