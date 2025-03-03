@@ -43,6 +43,14 @@ const createBlock = asyncHandler(async (req, res) => {
 });
 const getNotification = asyncHandler(async (req, res) => {
     const  userId  = req.query.userId;
+    const  count  = req.query.count;
+    if(count){
+        const notificationCount = await BlockModel.countDocuments({ 
+            userId: userId, 
+            status: "" 
+        });
+        return res.json({ count: notificationCount });
+    }
     const notifications = await BlockModel.find({ userId: userId });
     return res.json(notifications);
 });
