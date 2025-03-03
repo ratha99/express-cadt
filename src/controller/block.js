@@ -54,8 +54,33 @@ const getNotification = asyncHandler(async (req, res) => {
     const notifications = await BlockModel.find({ userId: userId });
     return res.json(notifications);
 });
+const updateNotificationStatus = asyncHandler(async (req, res) => {
+    const { notificationId } = req.body;
 
+    if (!notificationId) {
+        return res.status(400).json({ message: 'Notification ID is required' });
+    }
+
+    try {
+        // Find the notification by ID and update its status to "seen"
+        const updatedNotification = await BlockModel.findByIdAndUpdate(
+            notificationId,
+            { $set: { status: 'seen' } },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedNotification) {
+            return res.status(404).json({ message: 'Notification not found' });
+        }
+
+        return res.json(updatedNotification);
+    } catch (error) {
+        console.error('Error updating notification status:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
 module.exports = {
     createBlock,
-    getNotification
+    getNotification,
+    updateNotificationStatus
 };
