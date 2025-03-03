@@ -8,5 +8,5 @@ const blockRouter = express.Router()
 
 blockRouter.post('/', createBlock)
 blockRouter.get('/getnotification', getNotification)
-blockRouter.get('/updatenotification', updatenotificationstatus)
+blockRouter.patch('/updatenotification', updateNotificationStatus)
 module.exports = blockRouter
